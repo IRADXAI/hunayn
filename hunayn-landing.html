@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hunayn — AI radiology dictation, from key findings to complete report</title>
+<meta name="description" content="Dictate your key findings. Hunayn drafts the complete radiology report with calculations, society guidelines, and a copy-ready message to the ordering provider." />
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f7f8;
+    --border: #e5e5e5;
+    --text: #0d0d0d;
+    --text-soft: #6e6e80;
+    --text-faint: #9b9ba7;
+    --green: #10a37f;
+    --green-soft: #e6f6f1;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Söhne', 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    -webkit-font-smoothing: antialiased; line-height: 1.6;
+  }
+  a { color: inherit; }
+
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid #ececec;
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 28px;
+  }
+  .wordmark { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .domain { font-size: 12px; color: var(--text-faint); }
+  header nav { margin-left: auto; display: flex; gap: 22px; align-items: center; }
+  header nav a { font-size: 13.5px; text-decoration: none; color: var(--text-soft); }
+  header nav a:hover { color: var(--text); }
+  .btn {
+    display: inline-block; padding: 11px 24px; border-radius: 999px;
+    background: var(--text); color: #fff; font-size: 14px; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer; transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn.ghost { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+  .hero {
+    max-width: 880px; margin: 0 auto; padding: 88px 24px 64px;
+    text-align: center;
+  }
+  .hero .rex { margin-bottom: 18px; }
+  .hero h1 {
+    font-size: clamp(34px, 6vw, 56px); font-weight: 700;
+    letter-spacing: -0.03em; line-height: 1.08;
+  }
+  .hero h1 em { font-style: normal; color: var(--green); }
+  .hero p.sub {
+    margin: 22px auto 0; max-width: 560px;
+    font-size: 17px; color: var(--text-soft);
+  }
+  .hero .ctas { margin-top: 34px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .hero .note { margin-top: 14px; font-size: 12.5px; color: var(--text-faint); }
+
+  .demo {
+    max-width: 720px; margin: 0 auto 90px; padding: 0 24px;
+  }
+  .demo-card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.07);
+    overflow: hidden; text-align: left;
+  }
+  .demo-bar {
+    background: var(--bg-soft); border-bottom: 1px solid #ececec;
+    padding: 10px 16px; font-size: 12px; color: var(--text-faint);
+    display: flex; gap: 6px; align-items: center;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #e0e0e0; }
+  .demo-body { padding: 22px; font-family: 'SF Mono', ui-monospace, monospace; font-size: 12.5px; line-height: 1.75; }
+  .demo-in { color: var(--text-faint); }
+  .demo-in b { color: var(--text); font-weight: 600; }
+  .demo-arrow { text-align: center; color: var(--green); font-size: 16px; padding: 8px 0; font-family: inherit; }
+  .demo-out { background: var(--green-soft); border: 1px solid #c9ebe0; border-radius: 10px; padding: 14px 16px; white-space: pre-wrap; }
+
+  section.features { background: var(--bg-soft); border-top: 1px solid #ececec; border-bottom: 1px solid #ececec; padding: 80px 24px; }
+  .features-inner { max-width: 980px; margin: 0 auto; }
+  .features h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; text-align: center; }
+  .features .lede { text-align: center; color: var(--text-soft); margin: 10px auto 44px; max-width: 520px; font-size: 15px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .feature {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px;
+  }
+  .feature h3 { font-size: 15px; font-weight: 650; margin-bottom: 6px; }
+  .feature p { font-size: 13.5px; color: var(--text-soft); }
+
+
+  section.story { border-top: 1px solid #ececec; padding: 80px 24px; }
+  .story-inner { max-width: 620px; margin: 0 auto; text-align: center; }
+  .story h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .story p { font-size: 15px; color: var(--text-soft); margin-bottom: 14px; }
+  .story .sig { font-size: 13px; color: var(--text-faint); font-style: italic; }
+
+  footer { border-top: 1px solid #ececec; padding: 36px 24px; }
+  .footer-inner { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; }
+  .disclaimer { font-size: 11px; color: var(--text-faint); max-width: 720px; line-height: 1.6; }
+  .footer-links { display: flex; gap: 18px; font-size: 12.5px; }
+  .footer-links a { color: var(--text-soft); text-decoration: none; }
+  .footer-links a:hover { color: var(--text); }
+
+  @keyframes rex-wave { 0%,100% { transform: rotate(0deg);} 50% { transform: rotate(-24deg);} }
+  @keyframes rex-bob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-3px);} }
+  .rex-body { animation: rex-bob 2.6s ease-in-out infinite; }
+  .rex-arm { transform-origin: 88px 66px; animation: rex-wave 1.1s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .rex-body, .rex-arm { animation: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header>
+  <svg width="30" height="30" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="38" rx="26" ry="24" fill="#fdfdfb" stroke="#0d0d0d" stroke-width="3"/>
+    <path d="M46 56 q14 10 28 0 l-2 8 q-12 7 -24 0 z" fill="#fdfdfb" stroke="#0d0d0d" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M46 36 q5 -7 10 0" stroke="#0d0d0d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <path d="M64 36 q5 -7 10 0" stroke="#0d0d0d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <path d="M58 44 l2 4 l2 -4 z" fill="#0d0d0d"/>
+    <path d="M50 52 q10 7 20 0" stroke="#0d0d0d" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <circle cx="42" cy="44" r="3.5" fill="#ffd7cf"/><circle cx="78" cy="44" r="3.5" fill="#ffd7cf"/>
+  </svg>
+  <span class="wordmark">Hunayn</span>
+  <span class="domain">hunayn.ai</span>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#story">Why Hunayn</a>
+    <a class="btn" href="#" style="padding:9px 20px;font-size:13px;">Open the app</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="rex">
+    <svg width="110" height="110" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Rex, the Hunayn mascot, waving with a scroll">
+      <g class="rex-body">
+        <ellipse cx="60" cy="38" rx="26" ry="24" fill="#fdfdfb" stroke="#0d0d0d" stroke-width="3"/>
+        <path d="M46 56 q14 10 28 0 l-2 8 q-12 7 -24 0 z" fill="#fdfdfb" stroke="#0d0d0d" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M46 36 q5 -7 10 0" stroke="#0d0d0d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path d="M64 36 q5 -7 10 0" stroke="#0d0d0d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path d="M58 44 l2 4 l2 -4 z" fill="#0d0d0d"/>
+        <path d="M50 52 q10 7 20 0" stroke="#0d0d0d" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <line x1="55" y1="52.6" x2="55" y2="56.2" stroke="#0d0d0d" stroke-width="2" stroke-linecap="round"/>
+        <line x1="60" y1="54" x2="60" y2="57.4" stroke="#0d0d0d" stroke-width="2" stroke-linecap="round"/>
+        <line x1="65" y1="52.6" x2="65" y2="56.2" stroke="#0d0d0d" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="42" cy="44" r="3.5" fill="#ffd7cf"/><circle cx="78" cy="44" r="3.5" fill="#ffd7cf"/>
+        <line x1="60" y1="64" x2="60" y2="96" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round"/>
+        <path d="M60 72 q-14 -2 -16 6" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M60 72 q14 -2 16 6" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M60 82 q-11 -1 -13 5" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M60 82 q11 -1 13 5" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M46 68 q-10 6 -8 18" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="38" cy="88" r="3" fill="#fdfdfb" stroke="#0d0d0d" stroke-width="2.5"/>
+        <rect x="24" y="92" width="28" height="11" rx="2" fill="#f6ecd9" stroke="#0d0d0d" stroke-width="2.2"/>
+        <circle cx="24" cy="97.5" r="4" fill="#e8d9bd" stroke="#0d0d0d" stroke-width="2.2"/>
+        <circle cx="52" cy="97.5" r="4" fill="#e8d9bd" stroke="#0d0d0d" stroke-width="2.2"/>
+        <line x1="31" y1="96" x2="45" y2="96" stroke="#0d0d0d" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="31" y1="99.5" x2="42" y2="99.5" stroke="#0d0d0d" stroke-width="1.4" stroke-linecap="round"/>
+        <g class="rex-arm">
+          <path d="M74 68 q12 -4 16 -16" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="91" cy="49" r="3.5" fill="#fdfdfb" stroke="#0d0d0d" stroke-width="2.5"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <h1>Dictate the findings.<br /><em>Hunayn</em> writes the report.</h1>
+  <p class="sub">Speak your key findings once. Get a complete, guideline-correlated radiology report with calculations done, recommendations drafted, and a copy-ready message for the ordering provider.</p>
+  <div class="ctas">
+    <a class="btn" href="#">Start free</a>
+    <a class="btn ghost" href="#features">See how it works</a>
+  </div>
+  <div class="note">Built by a board-certified radiologist. No PHI. Every draft reviewed and signed by you.</div>
+</section>
+
+<div class="demo">
+  <div class="demo-card">
+    <div class="demo-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;hunayn.ai — CT chest</div>
+    <div class="demo-body">
+      <div class="demo-in"><b>You dictate:</b> "Follow up nodule. Right upper lobe solid nodule now 9 millimeters, previously 6 one year ago. Mild emphysema. No effusion."</div>
+      <div class="demo-arrow">▼</div>
+      <div class="demo-out">IMPRESSION:
+1. Enlarging 9 mm solid right upper lobe nodule, previously 6 mm, interval growth over 12 months. PET/CT or tissue sampling recommended per Fleischner Society guidelines.
+2. Mild centrilobular emphysema.
+
++ complete findings, technique, and a quick text for the ordering provider, timestamped.</div>
+    </div>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <div class="features-inner">
+    <h2>From key findings to signed-out, faster</h2>
+    <p class="lede">Everything between your eyes and the final report, handled.</p>
+    <div class="grid">
+      <div class="feature"><h3>Every modality</h3><p>CT, MRI, X-ray, ultrasound, PET/CT, nuclear medicine, mammography, and fluoroscopy, each with its own template support.</p></div>
+      <div class="feature"><h3>Your templates, your voice</h3><p>Paste your preset template and Hunayn fills it, keeping your structure and your normal language.</p></div>
+      <div class="feature"><h3>Calculations done</h3><p>Volumes, interval growth percentages, ratios and indices computed and placed in the findings automatically.</p></div>
+      <div class="feature"><h3>Guidelines built in</h3><p>Fleischner, TI-RADS, LI-RADS, Bosniak, O-RADS, and ACR incidental findings recommendations, cited by name.</p></div>
+      <div class="feature"><h3>Documents in, data out</h3><p>Drag in tech worksheets, prior reports, and graphs. Measurements are extracted and integrated into the draft.</p></div>
+      <div class="feature"><h3>Full or fragmented</h3><p>Copy the whole report at once, or section by section with one-click copy for findings, impression, and more.</p></div>
+      <div class="feature"><h3>Quick text</h3><p>A one-line, timestamped message for the ordering provider, ready to paste into a text.</p></div>
+      <div class="feature"><h3>Dictate or type</h3><p>Speak your findings straight into the box with the built in mic or any dictation tool. No special hardware.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="story-inner">
+    <h2>Why "Hunayn"?</h2>
+    <p>Hunayn ibn Ishaq (809–873) was the greatest translator of Baghdad's House of Wisdom and author of the first systematic treatise on the eye. He turned raw knowledge into precise, trusted text, and was famously paid in gold by the weight of his manuscripts, because accuracy was the product.</p>
+    <p>That is the job of a radiology report: seeing clearly, then translating what you saw into words a clinician can act on. Hunayn the tool does the translation. The seeing stays yours.</p>
+    <p class="sig">Built by a practicing radiologist who got tired of typing normals.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="#">Open the app</a>
+      <a href="#">Terms &amp; Disclaimer</a>
+      <a href="#">Contact</a>
+    </div>
+    <p class="disclaimer">Hunayn is an educational drafting aid for licensed physicians only. It is not a medical device, does not diagnose or treat any condition, and does not interpret medical images. Output may contain errors and must be independently verified in full by the signing physician, who retains sole professional responsibility for every report. Do not submit protected health information. Not available in all areas. © 2026 Hunayn · hunayn.ai</p>
+  </div>
+</footer>
+
+</body>
+</html>
