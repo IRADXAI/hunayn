@@ -21,8 +21,8 @@
 
 <div id="root"></div>
 
-<script type="text/babel" data-presets="react">
-
+<script type="text/babel">
+  
 if (!window.storage) {
   window.storage = {
     async get(k){ const v=localStorage.getItem("hunayn:"+k); if(v===null) throw new Error("nf"); return {key:k,value:v}; },
